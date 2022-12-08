@@ -6,5 +6,5 @@ package org.example.service;
  * @create: 2022-12-08
  **/
 
-public class GenerateSql {
+public class GenerateSqlService {
 }

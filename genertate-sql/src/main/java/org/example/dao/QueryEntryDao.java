@@ -30,7 +30,7 @@ public class QueryEntryDao {
     * @return: java.util.List<java.util.Map<java.lang.String,java.lang.Object>>
     * @throws:
     */
-    public List<Map<String,Object>> getEntry(String nameColumn, String residColumn, String tableName,String condition) {
+    public List<Map<String,Object>> getEntry(String tableName,String nameColumn, String residColumn, String condition) {
         return selectMapper.getEntry(nameColumn, residColumn, tableName, condition);
     }
 
