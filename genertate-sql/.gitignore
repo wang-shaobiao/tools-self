@@ -17,6 +17,8 @@
 log/
 target/
 
+/destination/
+
 
 /logs/
 /span/

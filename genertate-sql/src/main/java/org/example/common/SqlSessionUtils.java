@@ -33,8 +33,8 @@ public class SqlSessionUtils {
             //1. 加载mybatis全局配置
             wholeSetting = ConfigUtils.getMybatisConfig();
             //2. 加载配置文件
-            propertiesPath = ConfigUtils.getPath(PROPERTIES_TYPE, customPath);
-            br = Files.newBufferedReader(propertiesPath, utf8Charset);
+            propertiesPath = ConfigUtils.getConfPath(PROPERTIES_TYPE, customPath);
+            br = Files.newBufferedReader(propertiesPath);
             properties.load(br);
             //3. 创建sqlSessionFactory对象
             SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(wholeSetting, properties);

@@ -31,6 +31,9 @@ public class QueryEntryDao {
     * @throws:
     */
     public List<Map<String,Object>> getEntry(String tableName,String nameColumn, String residColumn, String condition) {
+        //sql断点
+        //org.apache.ibatis.executor.CachingExecutor#query
+        //org.apache.ibatis.executor.SimpleExecutor#doQuery
         return selectMapper.getEntry(nameColumn, residColumn, tableName, condition);
     }
 
@@ -41,7 +44,7 @@ public class QueryEntryDao {
     * @throws:
     */
     public <T> T getMapper(Class<T> clzz,String... customPath) {
-        SqlSession sqlSession  = SqlSessionUtils.getSqlSession();
+        SqlSession sqlSession  = SqlSessionUtils.getSqlSession(customPath);
         T mapper = sqlSession.getMapper(clzz);
         return mapper;
     }
