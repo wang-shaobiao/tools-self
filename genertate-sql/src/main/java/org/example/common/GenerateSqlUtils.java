@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.example.common.CommonConstants.*;
 
@@ -39,7 +41,8 @@ public class GenerateSqlUtils {
                 .append("-- ").append("Condition: ").append(condition).append("\r\n")
                 .append("-- ").append("Note: ").append(note).append("\r\n");
         //脚本内容
-        entryList.stream().forEach(m -> {
+        Set<Map<String,Object>> set = entryList.stream().collect(Collectors.toSet());
+        set.stream().forEach(m -> {
             sqlStrBuilder.append("update ").append(tableName)
                     .append(" set ").append(residColumn).append("=").append("'" + m.get(residColumn) + "'")
                     .append(" where ").append(nameColumn).append("=").append("'" + m.get(nameColumn) + "'")

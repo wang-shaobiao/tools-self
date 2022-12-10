@@ -17,7 +17,9 @@
 log/
 target/
 
-/destination/
+
+destination/
+des/
 
 
 /logs/

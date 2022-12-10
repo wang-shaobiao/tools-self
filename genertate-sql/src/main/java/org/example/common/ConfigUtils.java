@@ -1,7 +1,6 @@
 package org.example.common;
 
 import org.example.exception.NoPathException;
-import sun.util.resources.LocaleData;
 
 import java.io.File;
 import java.io.InputStream;
@@ -31,16 +30,21 @@ public class ConfigUtils {
      */
     public static Path getConfPath(String type,String... customPath) throws NoPathException {
         Path path = null;
-        if (isEmpty(customPath)) {
+        if (isNullOrEmpty(customPath)) {
             //默认规则路径
+            /*
+                fixme --存在bug和不灵活的地方，暂时不处理了
+             */
             String conf = System.getProperty("conf");
-            if (isEmpty(conf)) {
-                conf = System.getProperty("user.dir") + File.separator + Default.conf_DEFAULT;
+            if (isNullOrEmpty(conf)) {
+                conf = System.getProperty("user.dir") + File.separator + Default.CONF_DEFAULT;
             }
-            if (PropertiesRelated.PROPERTIES_TYPE.equals(type)) {//application.properties获取规则
+            if (PropertiesRelated.PROPERTIES_TYPE.equals(type)&&!conf.contains(".properties")) {//application.properties获取规则
                 path = Paths.get(conf, PropertiesRelated.PROPERTIES_NAME);
-            } else if (ExcelRelated.EXCEL_TYPE.equals(type)) {
+            } else if (ExcelRelated.EXCEL_TYPE.equals(type) && !conf.contains(".xlsx") && !conf.contains("xlsx")) {
                 path = Paths.get(conf, ExcelRelated.EXCEL_NAME);//源Excel获取
+            } else {
+                path = Paths.get(conf);
             }
         }else {
             //自定义路径
@@ -61,10 +65,10 @@ public class ConfigUtils {
      */
     public static Path getDesPath(String type, String... customPath) {
         Path path = null;
-        if (isEmpty(customPath)) {
+        if (isNullOrEmpty(customPath)) {
             //默认规则路径
             String conf = System.getProperty("des");
-            if (isEmpty(conf)) {
+            if (isNullOrEmpty(conf)) {
                 conf = Default.DES_DEFAULT;
             }
             if (GenerateRelated.GENERATE_TYPE_SQL.equals(type)) {
@@ -77,18 +81,18 @@ public class ConfigUtils {
     }
 
 
-    public static boolean isEmpty(String... str) {
+    public static boolean isNullOrEmpty(String... str) {
         return str == null || str.length == 0;
     }
 
-    public static boolean isEmpty(String str) {
+    public static boolean isNullOrEmpty(String str) {
         return str == null || str.length() == 0;
 
     }
 
     /** 
-     * @Description mybatis配置文件加载 
-     * @Param: [] 
+     * @Description mybatis配置文件加载
+     * @Param: []
      * @return: java.io.InputStream 
      * @throws: 
      */

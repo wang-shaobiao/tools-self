@@ -1,22 +1,22 @@
 package org.example.service;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.example.Main;
+
 import org.example.common.ConfigUtils;
 import org.example.common.ExcelUtils;
 import org.example.common.GenerateSqlUtils;
 import org.example.dao.QueryEntryDao;
 
-import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
+
 import java.util.List;
 import java.util.Map;
 
 import static org.example.common.CommonConstants.*;
-import static org.example.common.CommonConstants.*;
+
 
 /**
  * @description: generate sql script related
@@ -45,23 +45,35 @@ public class GenerateSqlService {
          * 1. 读取查询信息
          */
 
-        //TODO excel正式
-        //List<Map<String,Object>> excelList = readExcelService.doGetExcelInfo(columnDefines);
-        //本地调用，自定义项目路径
-        List<Map<String,Object>> excelList = ExcelUtils.doGetExcelInfo(ExcelRelated.colDef, excelPath);
+        List<Map<String,Object>> excelList = null;
+        if (excelPath == null || excelPath.isEmpty()) {
+            excelList = ExcelUtils.doGetExcelInfo(ExcelRelated.colDef);
+        } else {
+            //本地调用，自定义项目路径
+            excelList = ExcelUtils.doGetExcelInfo(ExcelRelated.colDef, excelPath);
+        }
 
         if (CollectionUtils.isEmpty(excelList)) {
-            System.out.println("excel未定义抽取条件，请检查");
+            System.out.println("excel不存在或未定义抽取条件，请检查");
             return;
         }
         /**
          * 2. 执行词条信息查询
          */
-        //TODO query正式
-        //QueryEntryDao queryEntryDao = new QueryEntryDao();
-        //本地调用，自定义项目路径
-        QueryEntryDao queryEntryDao = new QueryEntryDao(proPath);
-        Path desPath = ConfigUtils.getDesPath(GenerateRelated.GENERATE_TYPE_SQL, sqlPath);
+        QueryEntryDao queryEntryDao = null;
+        Path desPath = null;
+        if (proPath == null || proPath.isEmpty()) {
+            queryEntryDao = new QueryEntryDao();
+        } else {
+            //本地调用，自定义项目路径
+            queryEntryDao = new QueryEntryDao(proPath);
+        }
+        if (sqlPath == null || sqlPath.isEmpty()) {
+            desPath = ConfigUtils.getDesPath(GenerateRelated.GENERATE_TYPE_SQL);
+        } else {
+            desPath = ConfigUtils.getDesPath(GenerateRelated.GENERATE_TYPE_SQL, sqlPath);
+        }
+
         if (!Files.exists(desPath)) {
             Files.createDirectories(desPath);
         }

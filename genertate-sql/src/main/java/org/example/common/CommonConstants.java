@@ -10,7 +10,7 @@ public interface CommonConstants {
         /**
          * 配置文件路径-默认
          */
-        String conf_DEFAULT = "config";
+        String CONF_DEFAULT = "config";
 
     }
     interface ExcelRelated{

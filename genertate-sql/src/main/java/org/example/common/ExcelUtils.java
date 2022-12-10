@@ -47,7 +47,7 @@ public class ExcelUtils {
      * @return: java.util.List<java.util.Map<java.lang.String,java.lang.Object>> 
      * @throws: 
      */
-    public static List<Map<String, Object>> doGetExcelInfo(String[] columnDefines, String... strings) {
+    public static List<Map<String, Object>> doGetExcelInfo(String[] columnDefines, String... strings) throws Exception {
         List<Map<String,Object>> list = new ArrayList<>();
         String path = null;
         Workbook workbook = null;
@@ -60,8 +60,10 @@ public class ExcelUtils {
             list = getExcelInfo(workbook, 0, columnDefines);
         } catch (NoPathException noPathException) {
             System.out.println(noPathException.getMessage());
+            throw new Exception();
         } catch (Exception e) {
             e.printStackTrace();
+            throw new Exception();
         } finally{
             if (in != null) {
                 try {
