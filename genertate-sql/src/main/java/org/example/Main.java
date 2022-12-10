@@ -15,9 +15,9 @@ public class Main {
         String excelPath = null;
         String sqlPath = null;
         {
-            proPath = Paths.get(Main.class.getClassLoader().getResource(PROPERTIES_NAME).toURI()).toString();
-            excelPath = Paths.get(Main.class.getClassLoader().getResource(EXCEL_NAME).toURI()).toString();
-            Path sPath = Paths.get(DES_DEFAULT);
+            proPath = Paths.get(Main.class.getClassLoader().getResource(PropertiesRelated.PROPERTIES_NAME).toURI()).toString();
+            excelPath = Paths.get(Main.class.getClassLoader().getResource(ExcelRelated.EXCEL_NAME).toURI()).toString();
+            Path sPath = Paths.get(Default.DES_DEFAULT);
             if (!Files.exists(sPath)) {
                 Files.createDirectories(sPath);
             }

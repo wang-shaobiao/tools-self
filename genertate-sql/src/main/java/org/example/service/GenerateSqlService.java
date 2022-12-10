@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.example.Main;
 import org.example.common.ConfigUtils;
 import org.example.common.ExcelUtils;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.example.common.CommonConstants.*;
-import static org.example.common.CommonConstants.GENERATE_TYPE_SQL;
+import static org.example.common.CommonConstants.*;
 
 /**
  * @description: generate sql script related
@@ -25,6 +26,12 @@ import static org.example.common.CommonConstants.GENERATE_TYPE_SQL;
 
 public class GenerateSqlService {
 
+    /** 
+     * @Description 执行生成sql脚本操作
+     * @Param: [strings] 
+     * @return: void 
+     * @throws: 
+     */
     public void doGenerateSql(String...strings) throws Exception {
         String excelPath = null;
         String proPath = null;
@@ -37,13 +44,16 @@ public class GenerateSqlService {
         /**
          * 1. 读取查询信息
          */
-        //定义列信息
-        String[] colDef = {"tableName","nameColumn","residColumn","condition"};
+
         //TODO excel正式
         //List<Map<String,Object>> excelList = readExcelService.doGetExcelInfo(columnDefines);
         //本地调用，自定义项目路径
-        List<Map<String,Object>> excelList = ExcelUtils.doGetExcelInfo(colDef, excelPath);
+        List<Map<String,Object>> excelList = ExcelUtils.doGetExcelInfo(ExcelRelated.colDef, excelPath);
 
+        if (CollectionUtils.isEmpty(excelList)) {
+            System.out.println("excel未定义抽取条件，请检查");
+            return;
+        }
         /**
          * 2. 执行词条信息查询
          */
@@ -51,24 +61,25 @@ public class GenerateSqlService {
         //QueryEntryDao queryEntryDao = new QueryEntryDao();
         //本地调用，自定义项目路径
         QueryEntryDao queryEntryDao = new QueryEntryDao(proPath);
-        Path desPath = ConfigUtils.getDesPath(GENERATE_TYPE_SQL, sqlPath);
+        Path desPath = ConfigUtils.getDesPath(GenerateRelated.GENERATE_TYPE_SQL, sqlPath);
         if (!Files.exists(desPath)) {
             Files.createDirectories(desPath);
         }
         int i = 0;
         for (Map map : excelList) {
-            String tableName = (String)map.get(colDef[0]);
-            String nameColumn = (String)map.get(colDef[1]);
-            String residColumn = (String)map.get(colDef[2]);
-            String condition = (String)map.get(colDef[3]);
-            List<Map<String,Object>> entryList = queryEntryDao.getEntry(tableName, nameColumn, residColumn,condition);
-            String fileName = FILE_PREFIX + "-" + tableName + "-" + LocalDate.now() + ".sql";
+            String tableName = (String)map.get(ExcelRelated.colDef[0]);
+            String nameColumn = (String)map.get(ExcelRelated.colDef[1]);
+            String residColumn = (String)map.get(ExcelRelated.colDef[2]);
+            String condition = (String)map.get(ExcelRelated.colDef[3]);
+            String note = (String) map.get(ExcelRelated.colDef[4]);
+            List<Map<String, Object>> entryList = queryEntryDao.getEntry(tableName, nameColumn, residColumn, condition);
+            //无值跳过
+            if (CollectionUtils.isEmpty(entryList)) {
+                continue;
+            }
+            String fileName = GenerateSqlUtils.getGenerateFileName(tableName, nameColumn);
             Path filePath = Paths.get(desPath.toRealPath().toString(),fileName);
-            /**
-             * TODO 3. 生成Update脚本
-             */
-
-            Boolean flag = GenerateSqlUtils.generateSqlFile(filePath, entryList, tableName, nameColumn, residColumn);
+            Boolean flag = GenerateSqlUtils.generateSqlFile(filePath, entryList, tableName, nameColumn, residColumn,condition,note);
             if (!flag) {
                 System.out.printf("Sql脚本生成失败,%s",tableName);
                 return ;

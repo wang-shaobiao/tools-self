@@ -21,13 +21,12 @@ import static org.example.common.CommonConstants.*;
 
 
 public class ConfigUtils {
-
-
-    /**
+    
+    /** 
      * @Description 获取资源路径，无入参路径，则使用默认规则获取
      * 优先级：自定义路径->jvm参数conf->默认/config/路径 高->低
-     * @Param: [type, customPath]
-     * @return: java.nio.file.Path
+     * @Param: [type, customPath] 
+     * @return: java.nio.file.Path 
      * @throws: NoPathException
      */
     public static Path getConfPath(String type,String... customPath) throws NoPathException {
@@ -36,12 +35,12 @@ public class ConfigUtils {
             //默认规则路径
             String conf = System.getProperty("conf");
             if (isEmpty(conf)) {
-                conf = System.getProperty("user.dir") + File.separator + conf_DEFAULT;
+                conf = System.getProperty("user.dir") + File.separator + Default.conf_DEFAULT;
             }
-            if (PROPERTIES_TYPE.equals(type)) {//application.properties获取规则
-                path = Paths.get(conf, PROPERTIES_NAME);
-            } else if (EXCEL_TYPE.equals(type)) {
-                path = Paths.get(conf, EXCEL_NAME);//源Excel获取
+            if (PropertiesRelated.PROPERTIES_TYPE.equals(type)) {//application.properties获取规则
+                path = Paths.get(conf, PropertiesRelated.PROPERTIES_NAME);
+            } else if (ExcelRelated.EXCEL_TYPE.equals(type)) {
+                path = Paths.get(conf, ExcelRelated.EXCEL_NAME);//源Excel获取
             }
         }else {
             //自定义路径
@@ -54,15 +53,21 @@ public class ConfigUtils {
         return path;
     }
 
+    /** 
+     * @Description 获取生成目录地址 
+     * @Param: [type, customPath] 
+     * @return: java.nio.file.Path 
+     * @throws: 
+     */
     public static Path getDesPath(String type, String... customPath) {
         Path path = null;
         if (isEmpty(customPath)) {
             //默认规则路径
             String conf = System.getProperty("des");
             if (isEmpty(conf)) {
-                conf = DES_DEFAULT;
+                conf = Default.DES_DEFAULT;
             }
-            if (GENERATE_TYPE_SQL.equals(type)) {
+            if (GenerateRelated.GENERATE_TYPE_SQL.equals(type)) {
                 path = Paths.get(conf, LocalDate.now().toString());
             }
         } else {
@@ -81,6 +86,12 @@ public class ConfigUtils {
 
     }
 
+    /** 
+     * @Description mybatis配置文件加载 
+     * @Param: [] 
+     * @return: java.io.InputStream 
+     * @throws: 
+     */
     public static InputStream getMybatisConfig() {
         return ConfigUtils.class.getClassLoader().getResourceAsStream("mybatis-config.xml");
     }

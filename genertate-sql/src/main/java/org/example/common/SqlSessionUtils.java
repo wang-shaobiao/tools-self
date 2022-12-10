@@ -11,7 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
-import static org.example.common.CommonConstants.PROPERTIES_TYPE;
+import static org.example.common.CommonConstants.*;
 
 /**
  * @description: mybatis-sqlSession
@@ -21,6 +21,12 @@ import static org.example.common.CommonConstants.PROPERTIES_TYPE;
 
 public class SqlSessionUtils {
 
+    /** 
+     * @Description 获取sqlSession 
+     * @Param: [customPath] 
+     * @return: org.apache.ibatis.session.SqlSession 
+     * @throws: 
+     */
     public static SqlSession getSqlSession(String... customPath) {
         InputStream wholeSetting = null;
         BufferedReader br = null;
@@ -33,7 +39,7 @@ public class SqlSessionUtils {
             //1. 加载mybatis全局配置
             wholeSetting = ConfigUtils.getMybatisConfig();
             //2. 加载配置文件
-            propertiesPath = ConfigUtils.getConfPath(PROPERTIES_TYPE, customPath);
+            propertiesPath = ConfigUtils.getConfPath(PropertiesRelated.PROPERTIES_TYPE, customPath);
             br = Files.newBufferedReader(propertiesPath);
             properties.load(br);
             //3. 创建sqlSessionFactory对象
