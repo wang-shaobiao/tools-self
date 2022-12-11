@@ -1,8 +1,10 @@
 package org.example.common;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static org.example.common.CommonConstants.*;
@@ -32,14 +35,8 @@ public class GenerateSqlUtils {
         StringBuilder noteBuilder = new StringBuilder();
         StringBuilder sqlStrBuilder = new StringBuilder();
         PrintWriter out = null;
-        //注释说明
-        noteBuilder.append("-- ").append("International\r\n")
-                .append("-- -------------------------------\r\n")
-                .append("-- ").append("Creation Time: ").append(LocalDateTime.now()).append("\r\n")
-                .append("-- ").append("Table: ").append(tableName).append("\r\n")
-                .append("-- ").append("Column: ").append("[" + nameColumn + "]").append("&").append("[" + residColumn + "]").append("\r\n")
-                .append("-- ").append("Condition: ").append(condition).append("\r\n")
-                .append("-- ").append("Note: ").append(note).append("\r\n");
+        AtomicInteger sum = new AtomicInteger();
+
         //脚本内容
         Set<Map<String,Object>> set = entryList.stream().collect(Collectors.toSet());
         set.stream().forEach(m -> {
@@ -48,14 +45,24 @@ public class GenerateSqlUtils {
                     .append(" where ").append(nameColumn).append("=").append("'" + m.get(nameColumn) + "'")
                     .append(";")
                     .append("\r\n");
+            sum.getAndIncrement();
         });
+        //注释说明
+        noteBuilder.append("-- ").append("International\r\n")
+                .append("-- -------------------------------\r\n")
+                .append("-- ").append("Creation Time: ").append(LocalDateTime.now()).append("\r\n")
+                .append("-- ").append("Table: ").append(tableName).append("\r\n")
+                .append("-- ").append("Column: ").append("[" + nameColumn + "]").append("&").append("[" + residColumn + "]").append("\r\n")
+                .append("-- ").append("Condition: ").append(condition).append("\r\n")
+                .append("-- ").append("SUM: ").append(sum).append("条\r\n")
+                .append("-- ").append("Note: ").append(note).append("\r\n");
 
         try {
             File file = new File(filePath.toString());
             if (!file.exists()) {
                 file.createNewFile();
             }
-            out = new PrintWriter(file);
+            out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
             out.write(noteBuilder.toString());
             out.println();
             out.write(sqlStrBuilder.toString());
