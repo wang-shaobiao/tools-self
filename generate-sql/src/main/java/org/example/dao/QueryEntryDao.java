@@ -4,6 +4,7 @@ import com.mysql.cj.util.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.example.common.SqlSessionUtils;
+import org.example.dto.TableInfoDTO;
 import org.example.exception.MyExecption;
 import org.example.mapper.SelectMapper;
 
@@ -33,10 +34,14 @@ public class QueryEntryDao {
     * @return: java.util.List<java.util.Map<java.lang.String,java.lang.Object>>
     * @throws:
     */
-    public List<Map<String,Object>> getEntry(String tableName,String nameColumn, String residColumn, String condition) {
+    public List<Map<String,Object>> getEntry(TableInfoDTO info) {
         //sql断点
         //org.apache.ibatis.executor.CachingExecutor#query
         //org.apache.ibatis.executor.SimpleExecutor#doQuery
+        String tableName = info.getTableName();
+        String nameColumn = info.getNameColumn();
+        String residColumn = info.getResidColumn();
+        String condition = info.getCondition();
         List<Map<String, Object>> entryList = new ArrayList<>();
         try {
             if (tableName == null || nameColumn == null || residColumn == null) {

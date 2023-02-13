@@ -1,5 +1,9 @@
 package org.example.common;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import org.example.dto.TableInfoDTO;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -31,7 +35,12 @@ public class GenerateSqlUtils {
      * @return: java.lang.Boolean
      * @throws:
      */
-    public static Boolean generateSqlFile(Path filePath, List<Map<String,Object>> entryList,String tableName,String nameColumn,String residColumn,String condition,String note ) {
+    public static Boolean generateSqlFile(Path filePath, List<Map<String,Object>> entryList, TableInfoDTO infoDTO) {
+        String tableName = infoDTO.getTableName();
+        String residColumn = infoDTO.getResidColumn();
+        String nameColumn = infoDTO.getNameColumn();
+        String condition = infoDTO.getCondition();
+        String note = infoDTO.getNote();
         StringBuilder noteBuilder = new StringBuilder();
         StringBuilder sqlStrBuilder = new StringBuilder();
         PrintWriter out = null;
@@ -39,14 +48,32 @@ public class GenerateSqlUtils {
 
         //脚本内容
         Set<Map<String,Object>> set = entryList.stream().collect(Collectors.toSet());
-        set.stream().forEach(m -> {
-            sqlStrBuilder.append("update ").append(tableName)
-                    .append(" set ").append(residColumn).append("=").append("'" + m.get(residColumn) + "'")
-                    .append(" where ").append(nameColumn).append("=").append("'" + m.get(nameColumn) + "'")
-                    .append(";")
-                    .append("\r\n");
-            sum.getAndIncrement();
-        });
+        if ("cStyle".equals(nameColumn)) {
+
+            set.stream().forEach(m->{
+                JSONObject jsonObject = JSON.parseObject((String)m.get("cStyle"));
+                //String test = jsonObject.getString("placeholder");
+                String item = JSON.toJSONString(jsonObject.get("placeholder"));
+                if (item != null && item.length() != 0 && !"null".equals(item)) {
+                    sqlStrBuilder.append("update ").append(tableName)
+                            .append(" set ").append(nameColumn).append("=").append("'" + m.get(nameColumn) + "'")
+                            .append(" where ").append("cStyle like ").append("'%\"placeholder\":" + item + "%'")
+                            .append(";").append("-- " + m.get(nameColumn))
+                            .append("\r\n");
+                    sum.getAndIncrement();
+                }
+            });
+        } else {
+            set.stream().forEach(m -> {
+                sqlStrBuilder.append("update ").append(tableName)
+                        .append(" set ").append(residColumn).append("=").append("'" + m.get(residColumn) + "'")
+                        .append(" where ").append(nameColumn).append("=").append("'" + m.get(nameColumn) + "'")
+                        .append(";")
+                        .append("\r\n");
+                sum.getAndIncrement();
+            });
+        }
+
         //注释说明
         noteBuilder.append("-- ").append("International\r\n")
                 .append("-- -------------------------------\r\n")

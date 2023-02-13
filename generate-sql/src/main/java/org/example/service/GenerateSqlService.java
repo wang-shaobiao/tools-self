@@ -6,6 +6,7 @@ import org.example.common.ConfigUtils;
 import org.example.common.ExcelUtils;
 import org.example.common.GenerateSqlUtils;
 import org.example.dao.QueryEntryDao;
+import org.example.dto.TableInfoDTO;
 
 
 import java.nio.file.Files;
@@ -79,21 +80,28 @@ public class GenerateSqlService {
         }
         int i = 0;
         for (Map map : excelList) {
-            String tableName = (String)map.get(ExcelRelated.colDef[0]);
-            String nameColumn = (String)map.get(ExcelRelated.colDef[1]);
-            String residColumn = (String)map.get(ExcelRelated.colDef[2]);
-            String condition = (String)map.get(ExcelRelated.colDef[3]);
-            String note = (String) map.get(ExcelRelated.colDef[4]);
-            List<Map<String, Object>> entryList = queryEntryDao.getEntry(tableName, nameColumn, residColumn, condition);
+//            String tableName = (String)map.get(ExcelRelated.colDef[0]);
+//            String nameColumn = (String)map.get(ExcelRelated.colDef[1]);
+//            String residColumn = (String)map.get(ExcelRelated.colDef[2]);
+//            String condition = (String)map.get(ExcelRelated.colDef[3]);
+//            String note = (String) map.get(ExcelRelated.colDef[4]);
+            TableInfoDTO info  = TableInfoDTO.builder()
+                    .tableName((String)map.get(ExcelRelated.colDef[0]))
+                    .nameColumn((String)map.get(ExcelRelated.colDef[1]))
+                    .residColumn((String)map.get(ExcelRelated.colDef[2]))
+                    .condition((String)map.get(ExcelRelated.colDef[3]))
+                    .note((String) map.get(ExcelRelated.colDef[4]))
+                    .build();
+            List<Map<String, Object>> entryList = queryEntryDao.getEntry(info);
             //无值跳过
             if (CollectionUtils.isEmpty(entryList)) {
                 continue;
             }
-            String fileName = GenerateSqlUtils.getGenerateFileName(tableName, nameColumn);
+            String fileName = GenerateSqlUtils.getGenerateFileName(info.getTableName(), info.getNameColumn());
             Path filePath = Paths.get(desPath.toRealPath().toString(),fileName);
-            Boolean flag = GenerateSqlUtils.generateSqlFile(filePath, entryList, tableName, nameColumn, residColumn,condition,note);
+            Boolean flag = GenerateSqlUtils.generateSqlFile(filePath, entryList,info);
             if (!flag) {
-                System.out.printf("Sql脚本生成失败,%s",tableName);
+                System.out.printf("Sql脚本生成失败,%s",info.getTableName());
                 return ;
             }
             i++;
