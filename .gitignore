@@ -1,0 +1,37 @@
+﻿# Eclipse
+.classpath
+.project
+.settings/
+.factorypath
+# Intellij
+.idea/
+*.iml
+*.iws
+*.log
+*.html
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+
+destination/
+des*/
+
+
+/logs/
+/span/
+/tmp/
+/target/
+/disconf/
+/src/hrcloud-cpt-server/disconf/
+/src/hrcloud-cpt-server/tmp/
+/resources/UIExcel/**/*.sql
+/src/hrcloud-app/span/
+/src/hrcloud-app/logs/
+/lang-tool/logs/
+/src/**/*.iml
+/src/hrcloud-cpt/tmp/
