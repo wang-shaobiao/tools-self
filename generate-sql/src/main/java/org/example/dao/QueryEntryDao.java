@@ -1,10 +1,9 @@
 package org.example.dao;
 
 import com.mysql.cj.util.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
-import org.example.common.SqlSessionUtils;
-import org.example.dto.TableInfoDTO;
+import org.example.manager.SqlSessionUtils;
+import org.example.entity.TableInfoDTO;
 import org.example.exception.MyExecption;
 import org.example.mapper.SelectMapper;
 
@@ -51,6 +50,9 @@ public class QueryEntryDao {
                 condition = " 1=1 ";
             }
             entryList = this.selectMapper.getEntry(nameColumn, residColumn, tableName, condition);
+            if (nameColumn.equalsIgnoreCase("cStyle") && tableName.equalsIgnoreCase("billitem_base")) {
+                entryList = this.selectMapper.getBillItemCstyleEntry();
+            }
         } catch (MyExecption myExecption) {
             System.out.println(myExecption.getMessage());
             myExecption.printStackTrace();

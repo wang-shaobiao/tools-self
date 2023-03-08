@@ -1,4 +1,4 @@
-package org.example.common;
+package org.example.manager;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;

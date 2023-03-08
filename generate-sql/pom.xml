@@ -93,7 +93,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>org.example.GenerateSQL</mainClass>
+                                    <mainClass>org.example.GenerateStart</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>

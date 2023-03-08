@@ -1,5 +1,6 @@
-package org.example.common;
+package org.example.manager;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.example.exception.NoPathException;
 
 import java.io.File;
@@ -8,8 +9,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Map;
 
 import static org.example.common.CommonConstants.*;
+import static org.example.manager.CommonUtils.isNullOrEmpty;
 
 
 /**
@@ -81,14 +85,7 @@ public class ConfigUtils {
     }
 
 
-    public static boolean isNullOrEmpty(String... str) {
-        return str == null || str.length == 0;
-    }
 
-    public static boolean isNullOrEmpty(String str) {
-        return str == null || str.length() == 0;
-
-    }
 
     /** 
      * @Description mybatis配置文件加载

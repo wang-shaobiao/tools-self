@@ -2,7 +2,7 @@ package org.example;
 
 import org.example.service.GenerateSqlService;
 
-public class GenerateSQL {
+public class GenerateStart {
     public static void main(String[] args) throws Exception {
         //项目内自定义
 //        String proPath = null;

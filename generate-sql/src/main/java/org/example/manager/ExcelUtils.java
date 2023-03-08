@@ -1,4 +1,4 @@
-package org.example.common;
+package org.example.manager;
 
 
 import com.mysql.cj.util.StringUtils;

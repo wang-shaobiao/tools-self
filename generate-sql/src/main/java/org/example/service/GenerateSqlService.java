@@ -2,11 +2,11 @@ package org.example.service;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import org.example.common.ConfigUtils;
-import org.example.common.ExcelUtils;
-import org.example.common.GenerateSqlUtils;
+import org.example.manager.ConfigUtils;
+import org.example.manager.ExcelUtils;
+import org.example.manager.GenerateSqlUtils;
 import org.example.dao.QueryEntryDao;
-import org.example.dto.TableInfoDTO;
+import org.example.entity.TableInfoDTO;
 
 
 import java.nio.file.Files;
