@@ -15,7 +15,7 @@ public interface SelectMapper {
      * @return: java.util.List<java.util.Map<java.lang.String,java.lang.Object>>
      * @throws:
      */
-    @Select("select id, ${nameColumn},${residColumn} from ${tableName} where ${condition} and ${nameColumn} is not null and ${residColumn} is not null")
+    @Select("select ${nameColumn},${residColumn} from ${tableName} where ${condition} and ${nameColumn} is not null and ${residColumn} is not null")
     List<Map<String,Object>> getEntry(@Param("nameColumn")String nameColumn,@Param("residColumn")String residColumn,
                                       @Param("tableName")String tableName,@Param("condition")String condition);
 
