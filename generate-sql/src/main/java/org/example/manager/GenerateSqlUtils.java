@@ -73,25 +73,40 @@ public class GenerateSqlUtils {
     private static String generateSqlContent(TableInfoDTO infoDTO,AtomicInteger sum,List<Map<String,Object>> entryList) {
         StringBuilder sqlStrBuilder = new StringBuilder();
 
-        if ("cStyle".equals(infoDTO.getNameColumn())) {
-            Set<CstyleHandleDTO> dtoSet = entryList.stream().map(item->{
+        if ("cStyle".equals(infoDTO.getNameColumn()) && "billtplgroup_base".equals(infoDTO.getTableName())) {
+            Set<CstyleHandleDTO> dtoSet = entryList.stream().map(item -> {
                 CstyleHandleDTO dto = JSON.parseObject(JSON.toJSONString(item), CstyleHandleDTO.class);
                 return dto;
             }).collect(Collectors.toSet());
-            dtoSet.stream().forEach(m->{
+            dtoSet.stream().forEach(m -> {
                 sqlStrBuilder.append("update ").append(infoDTO.getTableName() + " a ")
                         .append("set ").append("a.cStyle = ").append("'" + m.getCStyle() + "'") // set content
                         .append("where ")
                         .append("a.cSubId = ").append("'" + m.getCSubId() + "'").append(" and ")
-                        .append("a.cFieldName = ").append("'" + m.getCFieldName() + "'").append(" and ")
-                        .append("a.cDataSourceName = ").append("'" + m.getCDataSourceName() + "'").append(" and ")
+                        .append("a.cName = ").append("'" + m.getCName() + "'").append(" and ")
                         .append("exists (").append(" select 1 from bill_base b where b.id = a.iBillId and b.cBillNo = ").append("'" + m.getCBillNo() + "'")
                         .append(");").append("-- " + m.getCStyle())
                         .append("\r\n");
                 sum.getAndIncrement();
             });
-        } else {
-            Set<Map<String,Object>> dtoSet = entryList.stream().collect(Collectors.toSet());
+        } else if("cStyle".equals(infoDTO.getNameColumn()) && "billitem_base".equals(infoDTO.getTableName())){
+            Set<CstyleHandleDTO> dtoSet = entryList.stream().map(item -> {
+                CstyleHandleDTO dto = JSON.parseObject(JSON.toJSONString(item), CstyleHandleDTO.class);
+                return dto;
+            }).collect(Collectors.toSet());
+            dtoSet.stream().forEach(m -> {
+                sqlStrBuilder.append("update ").append(infoDTO.getTableName() + " a ")
+                        .append("set ").append("a.cStyle = ").append("'" + m.getCStyle() + "'") // set content
+                        .append("where ")
+                        .append("a.cSubId = ").append("'" + m.getCSubId() + "'").append(" and ")
+                        .append("a.cFieldName = ").append("'" + (null == m.getCFieldName() ? "" : m.getCFieldName() )+ "'").append(" and ")
+                        .append("exists (").append(" select 1 from bill_base b where b.id = a.iBillId and b.cBillNo = ").append("'" + m.getCBillNo() + "'")
+                        .append(");").append("-- " + m.getCStyle())
+                        .append("\r\n");
+                sum.getAndIncrement();
+            });
+        }else {
+            Set<Map<String, Object>> dtoSet = entryList.stream().collect(Collectors.toSet());
             dtoSet.stream().forEach(m -> {
                 sqlStrBuilder.append("update ").append(infoDTO.getTableName())
                         .append(" set ").append(infoDTO.getResidColumn()).append("=").append("'" + m.get(infoDTO.getResidColumn()) + "'")

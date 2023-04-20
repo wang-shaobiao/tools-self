@@ -49,9 +49,12 @@ public class QueryEntryDao {
             if (StringUtils.isNullOrEmpty(condition)||" ".equals(condition)) {
                 condition = " 1=1 ";
             }
-            entryList = this.selectMapper.getEntry(nameColumn, residColumn, tableName, condition);
             if (nameColumn.equalsIgnoreCase("cStyle") && tableName.equalsIgnoreCase("billitem_base")) {
                 entryList = this.selectMapper.getBillItemCstyleEntry();
+            } else if (nameColumn.equalsIgnoreCase("cStyle") && tableName.equalsIgnoreCase("billtplgroup_base")) {
+                entryList = this.selectMapper.getTplGroupCstyleEntry();
+            }else {
+                entryList = this.selectMapper.getEntry(nameColumn, residColumn, tableName, condition);
             }
         } catch (MyExecption myExecption) {
             System.out.println(myExecption.getMessage());
